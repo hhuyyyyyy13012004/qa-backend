@@ -29,8 +29,13 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(3000);
-  console.log('🚀 Server running on http://localhost:3000');
-  console.log('📚 Swagger docs at http://localhost:3000/api/docs');
+  // Lấy port từ biến môi trường của Render hoặc mặc định là 3000 nếu chạy local
+  const port = process.env.PORT || 3000;
+
+  // Lắng nghe trên '0.0.0.0' là bắt buộc để Render có thể forward traffic vào app
+  await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Server running on port: ${port}`);
+  console.log(`📚 Swagger docs available at port: ${port}/api/docs`);
 }
 bootstrap();
