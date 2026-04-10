@@ -2,6 +2,19 @@
 
 A RESTful backend API for a Q&A platform built with NestJS, PostgreSQL, Redis, and Docker.
 
+## 🌐 Live Deployment
+
+|                  |                                               |
+| ---------------- | --------------------------------------------- |
+| **Base URL**     | https://qa-backend-v9rl.onrender.com/api      |
+| **Swagger Docs** | https://qa-backend-v9rl.onrender.com/api/docs |
+| **Platform**     | [Render](https://render.com)                  |
+| **Status**       | ✅ Live                                       |
+
+> ⚠️ **Note:** This service is hosted on Render's free tier. The server may **spin down after 15 minutes of inactivity**. The first request after inactivity may take **30–60 seconds** to respond while the server wakes up.
+
+---
+
 ## 🏗 System Architecture
 
 ```
@@ -47,7 +60,7 @@ A RESTful backend API for a Q&A platform built with NestJS, PostgreSQL, Redis, a
 | Multer     | -       | File upload       |
 | Swagger    | -       | API documentation |
 
-## ⚙️ Setup & Installation
+## ⚙️ Setup & Installation (Local Development)
 
 ### Prerequisites
 
@@ -75,7 +88,7 @@ Copy the file `.env.example` to `.env`:
 cp .env.example .env
 ```
 
-Then, adjust the values ​​in `.env` to suit your environment.
+Then, adjust the values in `.env` to suit your environment.
 
 ### 4. Start Docker services (PostgreSQL + Redis)
 
@@ -107,10 +120,39 @@ npm run build
 npm run start:prod
 ```
 
-### 8. Access the API
+### 8. Access the API (local)
 
 - **API Base URL**: http://localhost:3000/api
 - **Swagger Docs**: http://localhost:3000/api/docs
+
+## ☁️ Deploy to Render
+
+### Build Command
+
+```bash
+npm install --include=dev && npx prisma generate && npm run build
+```
+
+> `--include=dev` is required so that `@nestjs/cli` (in `devDependencies`) is available during the build step.
+
+### Start Command
+
+```bash
+npm run start:prod
+```
+
+### Environment Variables (Render Dashboard)
+
+Set the following environment variables in your Render service settings:
+
+| Variable       | Description                                      |
+| -------------- | ------------------------------------------------ |
+| `DATABASE_URL` | PostgreSQL connection string                     |
+| `REDIS_URL`    | Redis connection string                          |
+| `JWT_SECRET`   | Secret key for signing JWT tokens                |
+| `PORT`         | Port (Render sets this automatically to `10000`) |
+
+---
 
 ## 📁 Project Structure
 
@@ -371,7 +413,7 @@ All instances share:
 Full interactive API documentation available at:
 
 ```
-http://localhost:3000/api/docs
+https://qa-backend-v9rl.onrender.com/api/docs
 ```
 
 ### Key Endpoints Summary
