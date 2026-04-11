@@ -32,4 +32,6 @@ export const postsApi = {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
+
+  toggleLike: (id: string) => axiosInstance.post(`/posts/${id}/like`),
 };
