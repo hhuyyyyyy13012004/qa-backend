@@ -5,6 +5,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: ['http://localhost:5173', 'http://localhost:3001'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+  });
 
   // Global prefix — tất cả route đều bắt đầu bằng /api
   app.setGlobalPrefix('api');
