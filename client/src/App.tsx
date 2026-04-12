@@ -5,6 +5,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import HomePage from './pages/posts/HomePage';
 import PostDetailPage from './pages/posts/PostDetailPage';
+import QuestionsPage from './pages/questions/QuestionsPage';
+import QuestionDetailPage from './pages/questions/QuestionDetailPage';
 
 function App() {
   return (
@@ -17,14 +19,26 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
+        <Route path="/questions" element={<QuestionsPage />} />
+        <Route path="/questions/:id" element={<QuestionDetailPage />} />
 
-        {/* Protected routes — sẽ thêm dần */}
+        {/* Protected — sẽ thêm dần */}
         <Route
           path="/posts/create"
           element={
             <ProtectedRoute>
               <div className="text-center py-20 text-gray-400">
                 Create post — coming in FE-6
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/questions/create"
+          element={
+            <ProtectedRoute>
+              <div className="text-center py-20 text-gray-400">
+                Create question — coming in FE-6
               </div>
             </ProtectedRoute>
           }
