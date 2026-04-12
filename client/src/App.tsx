@@ -5,8 +5,12 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import HomePage from './pages/posts/HomePage';
 import PostDetailPage from './pages/posts/PostDetailPage';
+import CreatePostPage from './pages/posts/CreatePostPage';
+import EditPostPage from './pages/posts/EditPostPage';
+import MyPostsPage from './pages/posts/MyPostsPage';
 import QuestionsPage from './pages/questions/QuestionsPage';
 import QuestionDetailPage from './pages/questions/QuestionDetailPage';
+import CreateQuestionPage from './pages/questions/CreateQuestionPage';
 import NotificationsPage from './pages/NotificationsPage';
 
 function App() {
@@ -18,27 +22,34 @@ function App() {
 
       {/* Main layout */}
       <Route element={<Layout />}>
+        {/* Public */}
         <Route path="/" element={<HomePage />} />
         <Route path="/posts/:id" element={<PostDetailPage />} />
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/questions/:id" element={<QuestionDetailPage />} />
 
-        {/* Protected routes */}
-        <Route
-          path="/notifications"
-          element={
-            <ProtectedRoute>
-              <NotificationsPage />
-            </ProtectedRoute>
-          }
-        />
+        {/* Protected */}
         <Route
           path="/posts/create"
           element={
             <ProtectedRoute>
-              <div className="text-center py-20 text-gray-400">
-                Create post — coming in FE-6
-              </div>
+              <CreatePostPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts/edit/:id"
+          element={
+            <ProtectedRoute>
+              <EditPostPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-posts"
+          element={
+            <ProtectedRoute>
+              <MyPostsPage />
             </ProtectedRoute>
           }
         />
@@ -46,9 +57,15 @@ function App() {
           path="/questions/create"
           element={
             <ProtectedRoute>
-              <div className="text-center py-20 text-gray-400">
-                Create question — coming in FE-6
-              </div>
+              <CreateQuestionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
             </ProtectedRoute>
           }
         />
