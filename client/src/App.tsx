@@ -12,11 +12,12 @@ import QuestionsPage from './pages/questions/QuestionsPage';
 import QuestionDetailPage from './pages/questions/QuestionDetailPage';
 import CreateQuestionPage from './pages/questions/CreateQuestionPage';
 import NotificationsPage from './pages/NotificationsPage';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 
 function App() {
   return (
     <Routes>
-      {/* Auth routes */}
+      {/* Auth */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
@@ -28,7 +29,7 @@ function App() {
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/questions/:id" element={<QuestionDetailPage />} />
 
-        {/* Protected */}
+        {/* Protected — USER */}
         <Route
           path="/posts/create"
           element={
@@ -66,6 +67,16 @@ function App() {
           element={
             <ProtectedRoute>
               <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected — ADMIN only */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminDashboardPage />
             </ProtectedRoute>
           }
         />
