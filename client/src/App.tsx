@@ -7,6 +7,7 @@ import HomePage from './pages/posts/HomePage';
 import PostDetailPage from './pages/posts/PostDetailPage';
 import QuestionsPage from './pages/questions/QuestionsPage';
 import QuestionDetailPage from './pages/questions/QuestionDetailPage';
+import NotificationsPage from './pages/NotificationsPage';
 
 function App() {
   return (
@@ -22,7 +23,15 @@ function App() {
         <Route path="/questions" element={<QuestionsPage />} />
         <Route path="/questions/:id" element={<QuestionDetailPage />} />
 
-        {/* Protected — sẽ thêm dần */}
+        {/* Protected routes */}
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/posts/create"
           element={
