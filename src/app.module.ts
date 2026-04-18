@@ -1,60 +1,67 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prisma/prisma.module';
-import { AuthModule } from './auth/auth.module';
-import { PostsModule } from './posts/posts.module';
-import { QuestionsModule } from './questions/questions.module';
-import { CommentsModule } from './comments/comments.module';
-import { LikesModule } from './likes/likes.module';
-import { NotificationsModule } from './notifications/notifications.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UploadModule } from './upload/upload.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CommentsModule } from './comments/comments.module';
+import { isNotificationsQueueEnabled } from './config/env.helpers';
+import { LikesModule } from './likes/likes.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { PostsModule } from './posts/posts.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { QuestionsModule } from './questions/questions.module';
+import { UploadModule } from './upload/upload.module';
+
+const notificationsQueueEnabled = isNotificationsQueueEnabled();
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // đọc .env toàn cục
-    // Serve file tĩnh từ thư mục uploads
+    ConfigModule.forRoot({ isGlobal: true }),
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
-      serveRoot: '/uploads', // URL prefix
+      serveRoot: '/uploads',
     }),
-    BullModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const redisUrl = configService.get<string>('REDIS_URL');
+    ...(notificationsQueueEnabled
+      ? [
+          BullModule.forRootAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: (configService: ConfigService) => {
+              const redisUrl = configService.get<string>('REDIS_URL');
 
-        if (redisUrl) {
-          const url = new URL(redisUrl);
-          return {
-            connection: {
-              host: url.hostname,
-              port: parseInt(url.port),
-              password: url.password || undefined,
-              tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+              if (redisUrl) {
+                const url = new URL(redisUrl);
+
+                return {
+                  connection: {
+                    host: url.hostname,
+                    port: parseInt(url.port, 10),
+                    password: url.password || undefined,
+                    tls: redisUrl.startsWith('rediss://') ? {} : undefined,
+                  },
+                };
+              }
+
+              return {
+                connection: {
+                  host: configService.get<string>('REDIS_HOST', 'localhost'),
+                  port: configService.get<number>('REDIS_PORT', 6379),
+                },
+              };
             },
-          };
-        }
-
-        return {
-          connection: {
-            host: configService.get<string>('REDIS_HOST', 'localhost'),
-            port: configService.get<number>('REDIS_PORT', 6379),
-          },
-        };
-      },
-    }),
+          }),
+        ]
+      : []),
     PrismaModule,
     AuthModule,
     PostsModule,
     QuestionsModule,
     CommentsModule,
     LikesModule,
-    NotificationsModule,
+    NotificationsModule.register(notificationsQueueEnabled),
     UploadModule,
   ],
   controllers: [AppController],

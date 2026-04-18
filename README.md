@@ -96,6 +96,9 @@ Then, adjust the values in `.env` to suit your environment.
 docker compose up -d
 ```
 
+If you want to run locally without Redis, set `NOTIFICATIONS_QUEUE_ENABLED=false`.
+In that mode, notifications are written directly to PostgreSQL instead of going through BullMQ.
+
 ### 5. Run database migrations
 
 ```bash
